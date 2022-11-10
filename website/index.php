@@ -3,7 +3,7 @@
 /**
  * ETML
  * @author      : Serghei Diulgherov
- * Date         : 11.09.2022
+ * Date         : 09.11.2022
  * Description  : Ticket Management web app for "Gestion des élèves"
  * 
  * @copyright 2022 - ETML - Serghei Diulgherov
@@ -42,7 +42,13 @@ class MainControler
 
    protected function menuSelected($page)
    {
-      return null;
+      switch ($page)
+      {
+         case 'home':
+            $link = new HomeController();
+         break;
+      }
+      return $link;
    }
 
    protected function viewBuild($currentPage)
