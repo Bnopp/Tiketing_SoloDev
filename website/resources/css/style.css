@@ -1,0 +1,74 @@
+@import url('https://fonts.googleapis.com/css2?family=Titillium+Web:wght@200;400;600;700&display=swap');
+
+:root {
+    --color-bg-page: #26313A;
+    --color-bg-container: #1C252C;
+    --color-text-main: #FFFFFF;
+}
+
+html {
+    background-color: var(--color-bg-page);
+}
+
+body {
+    margin: 0;
+    height: 100vh;
+}
+
+.flex-center {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.login-page {
+    height: 100%;
+    color: var(--color-text-main);
+    font-family: 'Titillium Web', 'Consolas', sans-serif;
+    font: weight 700px;
+}
+
+.login-page h1 {
+    font-size: 110px;
+    margin: 0;
+    width: max-content;
+}
+
+.login-page h2 {
+    font-size: 60px;
+    margin: 0;
+    width: max-content;
+}
+
+.login-container {
+    width: 70%;
+    height: 70%;
+    display: flex;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 0 30px black;
+}
+
+.login-left-area {
+    height: 100%;
+    width: 60%;
+    background: url("../image/school_front.jpg");
+    background-size: cover;
+    background-position: right;
+}
+
+.login-img-overlay {
+    width: 100%;
+    height: 100%;
+    background-color: #026FC290;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding-left: 30px;
+}
+
+.login-right-area {
+    height: 100%;
+    width: 40%;
+    background-color: var(--color-bg-container);
+}
