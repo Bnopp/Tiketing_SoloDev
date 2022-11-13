@@ -17,6 +17,8 @@
  *  
  */
 
+include_once 'model/UserRepository.php';
+
 class HomeController extends Controller
 {
     /**
@@ -59,4 +61,18 @@ class HomeController extends Controller
         return $content;
     }
 
+    private function connectAction()
+    {
+        $userRepository = new UserRepository();
+
+        $view = file_get_contents('view/page/home/placeholder.php');
+        ob_start();
+        eval('?>' . $view);
+        $content = ob_get_clean();
+
+        return $content;
+    }
+
 }
+
+?>

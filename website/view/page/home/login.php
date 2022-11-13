@@ -11,12 +11,19 @@
     <div class="login-container">
         <div class="login-left-area">
             <div class="login-img-overlay">
-                <h2>Welcome to</h2>
-                <h1>GETM!</h1>
-                <p>Welcome to Gestes Eleves Ticketing Manager</p>
+                <h3>Bienvenue sur</h3>
+                <h1>GETS!</h1>
+                <p>Bienvenue sur Geste Élèves Ticketing System</p>
             </div>
         </div>
-        <div class="login-right-area">
+        <div class="login-right-area flex-center">
+            <h2>Log In</h2>
+            <form class="flex-center" id="login-form" method="post" action="index.php?controller=home&action=connect">
+                <input type="text" placeholder="Nom d'utilisateur" autocomplete="off" name="uname" required>
+                <input type="password" placeholder="Mot de Passe" name="psw" required>
+                <button type="submit">Log In</button>
+            </form>
         </div>
     </div>
+    <p>Copyright © Serghei Diulgherov - BnoppSoftware. All rights reserved.</p>
 </div>
