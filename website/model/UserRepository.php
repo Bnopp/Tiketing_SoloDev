@@ -47,7 +47,7 @@ class UserRepository implements Entity
 
         $data = $this
             -> _pdoConnection
-            -> queryPrepareExecute('SELECT FROM t_accounts WHERE accUsername = :username', $binds);
+            -> queryPrepareExecute('SELECT * FROM t_accounts WHERE accUsername = :username', $binds);
         
         return $this
             -> _pdoConnection

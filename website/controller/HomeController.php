@@ -61,11 +61,50 @@ class HomeController extends Controller
         return $content;
     }
 
+    private function logoutAction()
+    {
+        session_destroy();
+
+        header('Location: index.php');
+    }
+
     private function connectAction()
     {
         $userRepository = new UserRepository();
+        var_dump($_POST);
+        
+        if (isset($_POST['username'], $_POST['password']))
+        {
+            $userToConnect = $userRepository->getOne($_POST['username']);
 
-        $view = file_get_contents('view/page/home/placeholder.php');
+            if (count($userToConnect) > 0)
+            {
+                if (password_verify($_POST['password'], $userToConnect[0]['accPassword']))
+                {
+                    session_regenerate_id();
+                    $_SESSION['loggedIn'] = TRUE;
+                    $_SESSION['fullName'] = $userToConnect[0]['accFirstName'] . " " . $userToConnect[0]['accLastName'];
+                    $_SESSION['id'] = $userToConnect[0]['idAccount'];
+                }
+                else 
+                {
+                    echo 'wrong username and/or password';
+                }
+            }
+        }
+        else
+        {
+            echo 'wrong username and/or password';
+        }
+
+        //var_dump($_POST);
+
+        header('Location: index.php');
+    }
+
+    private function homeAction()
+    {
+        $view = file_get_contents('view/page/home/home.php');
         ob_start();
         eval('?>' . $view);
         $content = ob_get_clean();

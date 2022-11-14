@@ -36,7 +36,14 @@ class MainControler
       if (!isset($_GET['controller']))
       {
          $_GET['controller'] = 'home';
-         $_GET['action'] = 'login';
+         if (!isset($_SESSION['loggedIn']))
+         {
+            $_GET['action'] = 'login';
+         }
+         else
+         {
+            $_GET['action'] = 'home';
+         }
       }
 
       $currentLink = $this -> menuSelected($_GET['controller']);
