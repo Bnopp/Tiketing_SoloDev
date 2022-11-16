@@ -188,3 +188,39 @@ button:active {
 ::placeholder {
     color: #9DAFBD;
 }
+
+.menu-bar {
+    width: 95%;
+    display: flex;
+    flex-direction: row;
+    background-color: #1C252C;
+    align-items: center;
+    justify-content: space-between;
+    border-radius: 10px;
+    border: #47545E 2px solid;
+    margin-top: 20px;
+}
+
+.title-text {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    margin-left: 20px;
+}
+
+.vertical-separator {
+    height: 20px;
+    width: 2px;
+    background-color: #47545E;
+    margin-left: 10px;
+    margin-right: 10px;
+}
+
+.button {
+    text-decoration: none;
+    color: #FFFFFF;
+    border-radius: 10px;
+    background-color: #026FC2;
+    padding: 5px 15px 5px 15px;
+    margin-right: 20px;
+}
