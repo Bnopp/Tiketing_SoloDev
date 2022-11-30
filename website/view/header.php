@@ -10,7 +10,7 @@
  */
 ?>
 
-<div class="dashboard-page flex-center">
+<div class="flex-center" id="header">
     <header class="menu-bar">
         <div class="title-text">
             <h3>GETS</h3>
@@ -18,6 +18,6 @@
             <h3>Bienvenue, <?=$_SESSION['firstName']?></h3>
         </div>
         
-        <a class="button" href="index.php?controller=home&action=logout">Logout</a>
+        <a class="button" href="index.php?controller=home&action=logout">Se déconnecter</a>
     </header>
 </div>

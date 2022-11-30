@@ -13,9 +13,17 @@ html {
 body {
     margin: 0;
     height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
     color: var(--color-text-main);
     font-family: 'Titillium Web', 'Consolas', sans-serif;
     font: weight 700px;
+}
+
+#header {
+    width: 100%;
 }
 
 .flex-center {
@@ -27,6 +35,7 @@ body {
 
 .login-page {
     height: 100%;
+    width: 100%;
 }
 
 .login-page h1 {
@@ -100,7 +109,7 @@ body {
     transition: all 0.5s;
 }
 
-input:focus {
+input:focus, textarea:focus, select:focus {
     transform: translate(5px, -5px);
 }
 
@@ -223,4 +232,84 @@ button:active {
     background-color: #026FC2;
     padding: 5px 15px 5px 15px;
     margin-right: 20px;
+}
+
+.home-page { 
+    width: 95%;
+    height: 90%;
+    overflow: hidden;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.container {
+    border-radius: 10px;
+    background-color: #1C252C;
+    border: #47545E 2px solid
+}
+
+.user-dash-left {
+    width: 70%;
+    height: 94%;
+    margin-right: 20px;
+}
+
+.user-dash-right {
+    width: 30%;
+    height: 80%;
+}
+
+#ticket-creation {
+    height: 100%;
+}
+
+.data-form {
+    display: flex;
+    justify-content: space-between;
+    flex-direction: column;
+    padding: 20px;
+}
+
+.data-form label {
+    font-size: 25px;
+    font-weight: 600;
+}
+
+.data-form input[type=text], select, textarea {
+    border-radius: 10px;
+    border: #47545E Solid 2px;
+    background-color: #35424C;
+    color: #9DAFBD;
+    transition: all 0.5s;
+    padding-left: 10px;
+    margin-bottom: 10px;
+}
+
+.data-form input, select {
+    height: 50px;
+}
+
+.data-form select {
+    width: 50%;
+}
+
+.data-form input::placeholder, textarea::placeholder{
+    font-style: italic;
+}
+
+.data-form textarea {
+    height: 200px;
+}
+
+.data-form button {
+    background-color: #026FC2;
+    height: 50px;
+    border-radius: 10px;
+    border: none;
+    align-self: center;
+    color: #FFFFFF;
+    width: 30%;
+    transition: all 0.5s;
 }
