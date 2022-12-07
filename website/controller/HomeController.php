@@ -79,14 +79,14 @@ class HomeController extends Controller
 
             if (count($userToConnect) > 0)
             {
-                if (password_verify($_POST['password'], $userToConnect[0]['accPassword']))
+                if (password_verify($_POST['password'], $userToConnect[0]['usePassword']))
                 {
                     session_regenerate_id();
                     $_SESSION['loggedIn'] = TRUE;
-                    $_SESSION['isAdmin'] = $userToConnect[0]['accAdmin'];
-                    $_SESSION['firstName'] = $userToConnect[0]['accFirstName'];
-                    $_SESSION['lastName'] = $userToConnect[0]['accLastName'];
-                    $_SESSION['id'] = $userToConnect[0]['idAccount'];
+                    $_SESSION['isAdmin'] = $userToConnect[0]['useAdmin'];
+                    $_SESSION['firstName'] = $userToConnect[0]['useSurname'];
+                    $_SESSION['lastName'] = $userToConnect[0]['userName'];
+                    $_SESSION['id'] = $userToConnect[0]['idUser'];
                 }
                 else 
                 {

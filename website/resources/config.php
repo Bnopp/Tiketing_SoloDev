@@ -11,7 +11,7 @@
 
 return array(
     'host'          => 'localhost',
-    'dbName'        => 'db_tiketing',
+    'dbName'        => 'db_ticketing',
     'username'      => 'root',
     'password'      => 'root',
     'charset'       => 'utf8',

@@ -9,7 +9,7 @@
 
 <div class="home-page">
     <div class="container user-dash-left">
-
+    
     </div>
     <div class="user-dash-right">
         <h2>Créer un Ticket:</h2>
@@ -26,7 +26,7 @@
                 <option value="Question">Question</option>
                 <option value="Autre">Autre</option>
             </select>
-            <input type="file" name="file">
+            <input class="file-input" type="file" name="file">
             <button type="submit">Envoyer le Ticket</button>
         </form>
     </div>

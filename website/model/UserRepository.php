@@ -34,7 +34,7 @@ class UserRepository implements Entity
     {
         $data = $this
             -> _pdoConnection
-            -> querySimpleExecute('SELECT * FROM t_accounts');
+            -> querySimpleExecute('SELECT * FROM t_user');
 
         return $this
             -> _pdoConnection
@@ -47,7 +47,7 @@ class UserRepository implements Entity
 
         $data = $this
             -> _pdoConnection
-            -> queryPrepareExecute('SELECT * FROM t_accounts WHERE accUsername = :username', $binds);
+            -> queryPrepareExecute('SELECT * FROM t_user WHERE useUsername = :username', $binds);
         
         return $this
             -> _pdoConnection
