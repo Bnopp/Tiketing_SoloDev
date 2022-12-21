@@ -1,4 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Titillium+Web:wght@200;400;600;700&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,0,0");
+
 
 :root {
     --color-bg-page: #26313A;
@@ -312,7 +314,7 @@ button:active {
 }
 
 .file-input::before {
-    content: url(../image/plus.svg) ' ' 'Importer un fichier';
+    content: url(../image/plus.svg)' ' 'Importer un fichier';
     display: flex;
     justify-content: center;
     align-items: center;
@@ -328,4 +330,38 @@ button:active {
 
 .custom-file-input:active::before {
     background: -webkit-linear-gradient(top, #e3e3e3, #f9f9f9);
+}
+
+.alert {
+    padding: 20px;
+    background-color: #f44336;
+    color: white;
+    position: absolute;
+    top: 0;
+    z-index: 1000;
+    animation: 0.3s ease-out 0s 1 slideInFromLeft;
+}
+
+.closebtn {
+  margin-left: 15px;
+  color: white;
+  font-weight: bold;
+  float: right;
+  font-size: 22px;
+  line-height: 20px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.closebtn:hover {
+  color: black;
+}
+
+@keyframes slideInFromLeft {
+  0% {
+    transform: translateY(-100%);
+  }
+  100% {
+    transform: translateY(0);
+  }
 }
