@@ -125,7 +125,7 @@ class Data
         {
             /* Redirecting the user to the error page. */
             $_SESSION['error'] = "Erreur de requête. Erreur: {$e->getMessage()}";
-            header("Location: index.php?controller=home&action=error");
+            header("Location: index.php?controller=home&action=home");
             die();
         }
     }

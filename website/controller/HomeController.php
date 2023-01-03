@@ -19,6 +19,7 @@
 
 include_once 'model/UserRepository.php';
 include_once 'model/TicketRepository.php';
+include_once 'model/AttachementRepositoy.php';
 
 class HomeController extends Controller
 {
@@ -42,12 +43,8 @@ class HomeController extends Controller
             ));
         else
         {
-            $_SESSION['errorCode'] = 404;
-            $_SESSION['errorMsg'] = "Page not found";
-
-            //Error redirect page
-            //header("Location: ...")
-
+            $_SESSION['error'] = "Page not found";
+            header('Location: index.php');
             die();
         }
     }
@@ -107,6 +104,16 @@ class HomeController extends Controller
 
     private function homeAction()
     {
+        $ticketRepository = new TicketRepository();
+        define('TYPES', $ticketRepository -> getTicketTypes());
+        define('TICKETS', $ticketRepository -> getAll());
+        define('PRIORITIES', $ticketRepository -> getTicketPriorities());
+        define('STATUSES', $ticketRepository -> getTicketStatuses());
+
+        $userRepository = new UserRepository();
+        define('ADMINS', $userRepository -> getAdmins());
+        define('USERS', $userRepository -> getAll());
+
 
         if ($_SESSION['isAdmin'] == '0')
         {
@@ -127,9 +134,7 @@ class HomeController extends Controller
     private function createTicketAction()
     {
         $ticketRepository = new TicketRepository();
-        var_dump($_POST);
-        echo '<br>';
-        var_dump($_FILES);
+        $attachementRepository = new AttachementRepository();
 
         $target_dir = "uploads/" . $_SESSION['username'] . "/";
         if (!is_dir("uploads/"))
@@ -140,37 +145,95 @@ class HomeController extends Controller
         {
             mkdir($target_dir, 0777);
         }
-        $target_file = $target_dir . basename($_FILES["fileToUpload"]['name']);
-        $uploadOk = 1;
-        if (isset($_POST['submit']))
-        {
-            if (file_exists($target_file)) 
+
+        $errors = array();
+        $uploadedFiles = array();
+        $uploaded = 0;
+
+        if (isset($_FILES["fileToUpload"]['name'])){
+            $countfiles = count($_FILES['fileToUpload']['name']);
+
+            if (!is_dir($target_dir . basename($_FILES["fileToUpload"]['name'][0])))
             {
-                $_SESSION['error'] = "Le fichier existe déja, veuillez le renommer.";
-                $uploadOk = 0;
+                for( $i = 0; $i < $countfiles; $i++)
+                {
+                    $uploadOk = 1;
+                    $_SESSION['message'] = "Le(s) fichier(s)";
+
+                    $target_file = $target_dir . basename($_FILES["fileToUpload"]['name'][$i]);
+                    if (file_exists($target_file)) 
+                    {
+                        echo $target_file;
+                        array_push($errors, "Le fichier ". htmlspecialchars( basename( $_FILES["fileToUpload"]["name"][$i])).
+                        " existe déja, veuillez le renommer.");
+                        $uploadOk = 0;
+                    }
+                    else if ($_FILES["fileToUpload"]["size"][$i] > 419430400) 
+                    {
+                        array_push($errors, "Le fichier ". htmlspecialchars( basename( $_FILES["fileToUpload"]["name"][$i])).
+                        " est trop large, veuillez en sélectionner un autre. Limite 50 Mb");
+                        $uploadOk = 0;
+                    }
+
+                    if ($uploadOk == 1)
+                    {
+                        if (move_uploaded_file($_FILES["fileToUpload"]["tmp_name"][$i], $target_file)) 
+                        {
+                            array_push($uploadedFiles, $target_file);
+                            $uploaded = 1;
+                            $_SESSION['message'] = "Les fichiers ont étés envoyées";           
+                        } 
+                        else 
+                        {
+                            array_push($errors, "Une erreur est survenue lors de l'envoi de ". htmlspecialchars( basename( $_FILES["fileToUpload"]["name"][$i])).". 
+                            Veuillez vérifier qu'il soie sous la limite de 50 Mb");
+                        }
+                    }
+                    else
+                    {
+                        $uploaded = 0;
+                        foreach ($uploadedFiles as $file)
+                        {
+                            echo $file;
+                            unlink($file);
+                        }
+                    }
+                }
             }
-            if ($_FILES["fileToUpload"]["size"] > 419430400) 
+            else
             {
-                $_SESSION['error'] = "Le fichier est trop large, veuillez en sélectionner un autre. Limite 50 Mb";
-                $uploadOk = 0;
+                $uploaded = 1;
             }
         }
-        if ($uploadOk == 0) {
-            // echo "Sorry, your file was not uploaded.";
-            // if everything is ok, try to upload file
-        } 
-        else 
-        {
-            if (move_uploaded_file($_FILES["fileToUpload"]["tmp_name"], $target_file)) {
-              echo "The file ". htmlspecialchars( basename( $_FILES["fileToUpload"]["name"])). " has been uploaded.";
-            } else {
-              echo "Sorry, there was an error uploading your file.";
-            }
+        else{
+            array_push($errors, "Une erreur est survenue lors de l'envoi de vos fichiers. 
+            Veuillez vérifier qu'ils soient sous la limite de 50 Mb");
         }
 
+        if ($uploaded == 1)
+        {
+            var_dump($_POST);
+
+            $ticketRepository->createOne($_POST['title'], $_POST['description'], $_POST['type'], $_SESSION['id']);
+            $ticketId = $ticketRepository->getLastCreatedId();
+
+            foreach ($uploadedFiles as $file)
+            {
+                $attachementRepository->createOne($file, intval($ticketId[0]["LAST_INSERT_ID()"]));
+                unset($file);
+            }
+
+            $_SESSION['message'] = 'Le ticket a été crée avec succés.';
+        }
+
+        if (count($errors) > 0)
+        {
+            $_SESSION['error'] = $errors;
+        }
+        
         header('Location: index.php');
+        die();
     }
-
 }
 
 ?>

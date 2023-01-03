@@ -66,18 +66,24 @@ class MainControler
       $content = $currentPage -> display();
 
       include (dirname(__FILE__) . '/view/head.html');
+
       if ($_GET['action'] != 'login' && $_GET['action'] != 'connect')
       {
          include (dirname(__FILE__) . '/view/header.php');
       }
-      if ($_GET['action'] != 'connect')
+
+      if ($_GET['action'] != 'connect' && $_GET['action'] != 'createTicket')
       {
          if (isset($_SESSION['error']))
          {
-            //echo 'error detected';
             include (dirname(__FILE__) . '/view/error.php');
-            unset($_SESSION['error']);
          }
+         else if (isset($_SESSION['message']))
+         {
+            include (dirname(__FILE__) . '/view/message.php');
+         }
+         unset($_SESSION['error']);
+         unset($_SESSION['message']);
       }
       echo $content;
       include (dirname(__FILE__) . '/view/footer.html');

@@ -13,9 +13,9 @@
 <div class="flex-center" id="header">
     <header class="menu-bar">
         <div class="title-text">
-            <h3>GETS</h3>
+        <a href="index.php" style="color: white; text-decoration:none;"><h3>GETS</h3></a>
             <span class="vertical-separator"></span>
-            <h3>Bienvenue, <?=$_SESSION['firstName']?></h3>
+            <a href="index.php" style="color: white; text-decoration:none;"><h3>Bienvenue, <?=$_SESSION['firstName']?></h3></a>
         </div>
         
         <a class="button" href="index.php?controller=home&action=logout">Se déconnecter</a>

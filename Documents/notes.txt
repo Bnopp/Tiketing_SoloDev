@@ -1,0 +1,3 @@
+you need to increase the server side uplaod file limit which is set at 2mb default so it is bigger than the set script limit.
+
+to do that do this: https://www.codexworld.com/how-to/increase-file-upload-size-php/

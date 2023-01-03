@@ -8,6 +8,10 @@
     --color-text-main: #FFFFFF;
 }
 
+::-webkit-scrollbar {
+    display: none;
+}
+
 html {
     background-color: var(--color-bg-page);
 }
@@ -140,38 +144,6 @@ input:focus, textarea:focus, select:focus {
     box-shadow: 0 10px 20px -8px rgba(0, 0, 0,.7);
     transition: all 0.5s;
 }
-
-.checkbox {
-    position:relative;
-    display:block;
-    width:100%;
-    height:60px;
-    overflow:hidden;
-}
-.check {
-    width:50px;
-    height:50px;
-    position:absolute;
-    opacity:0;
-}
-.label span {
-    position:absolute;
-    margin-top:15px;
-}
-.path1{
-    stroke-dasharray:400;
-    stroke-dashoffset:400;
-    transition:.5s all;
-}
-.path2{
-    stroke-dasharray:1800;
-    stroke-dashoffset:1800;
-    transition:.5s all;
-}
-.check:checked + label svg g path {
-    stroke-dashoffset:0;
-}
-
   
 button:hover, .file-input:hover{
     transform: translate(5px, -5px);
@@ -224,7 +196,6 @@ button:active {
 .home-page { 
     width: 95%;
     height: 90%;
-    overflow: hidden;
     display: flex;
     flex-direction: row;
     justify-content: center;
@@ -239,17 +210,103 @@ button:active {
 
 .user-dash-left {
     width: 70%;
-    height: 94%;
+    height: 770px;
     margin-right: 20px;
+}
+
+.ticket-area {
+    background-color: #35424C;
+    border: #1C252C 2px solid;
+    overflow-y:scroll;
+}
+
+.ticket {
+    display: flex;
+    flex-direction: row;
+    margin: 10px;
+    padding: 10px;
+    text-decoration: none;
+    color: white;
+}
+
+.ticket h3 {
+    margin-bottom: 5px;
+}
+
+.ticket .preview {
+    text-align: justify;
+    width: 50%;
+}
+
+.ticket .information {
+    width: 50%;
+    margin-left: 50px;
+    display: flex;
+    flex-direction: column;
+    align-content: center;
+    justify-content: center;
+}
+
+.row {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    padding: 5px;
+}
+
+#info {
+    margin-right: 30px;
+}
+
+#info p {
+    margin: 0px;
+}
+
+.ticket .information #label {
+    color: #9DAFBD;
+}
+
+.low {
+    text-align: center;
+    border-radius: 10px;
+    padding: 5px;
+    background-color: green;
+}
+
+.medium {
+    text-align: center;
+    border-radius: 10px;
+    padding: 5px;
+    background-color: orange;
+}
+
+.high {
+    text-align: center;
+    border-radius: 10px;
+    padding: 5px;
+    background-color: red;
 }
 
 .user-dash-right {
     width: 30%;
-    height: 80%;
+    height: 650px;
 }
 
 #ticket-creation {
     height: 100%;
+}
+
+.info-content {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    align-items:flex-start;
+}
+
+.info-content .row {
+    margin-bottom: 10px;
+    justify-content: space-evenly;
 }
 
 .data-form {
@@ -257,6 +314,7 @@ button:active {
     justify-content: space-between;
     flex-direction: column;
     padding: 20px;
+    overflow-y: scroll;
 }
 
 .data-form label {
@@ -275,7 +333,7 @@ button:active {
 }
 
 .data-form input, select {
-    height: 50px;
+    min-height: 50px;
 }
 
 .data-form select {
@@ -287,7 +345,8 @@ button:active {
 }
 
 .data-form textarea {
-    height: 200px;
+    min-height: 200px;
+    resize: vertical;
 }
 
 .data-form button {
@@ -335,6 +394,16 @@ button:active {
 .alert {
     padding: 20px;
     background-color: #f44336;
+    color: white;
+    position: absolute;
+    top: 0;
+    z-index: 1000;
+    animation: 0.3s ease-out 0s 1 slideInFromLeft;
+}
+
+.message {
+    padding: 20px;
+    background-color: #6ab156;
     color: white;
     position: absolute;
     top: 0;

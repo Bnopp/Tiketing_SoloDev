@@ -41,6 +41,17 @@ class UserRepository implements Entity
             -> formatData($data);
     }
 
+    public function getAdmins()
+    {
+        $data = $this
+            -> _pdoConnection
+            -> querySimpleExecute('SELECT * FROM t_user WHERE useAdmin = 1');
+
+        return $this
+            -> _pdoConnection
+            -> formatData($data);
+    }
+
     public function getOne($username)
     {
         $binds['username'] = ['value' => $username, 'type' => PDO::PARAM_STR];

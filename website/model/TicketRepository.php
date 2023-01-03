@@ -54,9 +54,64 @@ class TicketRepository implements Entity
             -> formatData($data);
     }
 
-    public function createTicket()
+    public function createOne($title, $description, $type, $user)
     {
+        $binds['title'] = ['value' => $title, 'type' => PDO::PARAM_STR];
+        $binds['description'] = ['value' => $description, 'type' => PDO::PARAM_STR];
+        $binds['type'] = ['value' => $type, 'type' => PDO::PARAM_INT];
+        $binds['user'] = ['value' => $user, 'type' => PDO::PARAM_INT];
 
+        $data = $this
+            ->_pdoConnection
+            ->queryPrepareExecute('INSERT INTO t_ticket (ticTitle, ticDescription, fkType, fkUser) VALUES (:title, :description, :type, :user);', $binds);
+
+        return $this
+            ->_pdoConnection
+            ->formatData($data);
+    }
+
+    public function getLastCreatedId()
+    {
+        $data = $this
+            -> _pdoConnection
+            -> querySimpleExecute('SELECT LAST_INSERT_ID();');
+
+        return $this
+            -> _pdoConnection
+            -> formatData($data);
+    }
+
+    public function getTicketTypes()
+    {
+        $data = $this
+            -> _pdoConnection
+            -> querySimpleExecute('SELECT * FROM t_type');
+
+        return $this
+            -> _pdoConnection
+            -> formatData($data);
+    }
+
+    public function getTicketPriorities()
+    {
+        $data = $this
+            -> _pdoConnection
+            -> querySimpleExecute('SELECT * FROM t_priority');
+
+        return $this
+            ->_pdoConnection
+            ->formatData($data);
+    }
+
+    public function getTicketStatuses()
+    {
+        $data = $this
+            -> _pdoConnection
+            -> querySimpleExecute('SELECT * FROM t_status');
+
+        return $this
+            ->_pdoConnection
+            ->formatData($data);
     }
 }
 
