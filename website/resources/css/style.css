@@ -214,10 +214,40 @@ button:active {
     margin-right: 20px;
 }
 
+.search-bar .data-form {
+    flex-direction: column;
+    margin-bottom: 20px;
+}
+
+.search-bar input[type=text]{
+    width: 100%;
+    margin-right: 30px;
+}
+
+.search-bar #info {
+    width: 300px;
+    margin: 0;
+}
+
+.search-bar #info select {
+    width: 100%;
+}
+
+.search-bar #info button {
+    height: 50px;
+}
+
+.search-bar .row {
+    margin: 0;
+    padding: 0;
+    align-items: center;
+}
+
 .ticket-area {
     background-color: #35424C;
     border: #1C252C 2px solid;
     overflow-y:scroll;
+    height: 540px;
 }
 
 .ticket {
@@ -256,6 +286,8 @@ button:active {
 }
 
 #info {
+    display: flex;
+    flex-direction: column;
     margin-right: 30px;
 }
 
@@ -307,6 +339,11 @@ button:active {
 .info-content .row {
     margin-bottom: 10px;
     justify-content: space-evenly;
+}
+
+.info-content a {
+    color: #026FC2;
+    text-decoration: none;
 }
 
 .data-form {
@@ -366,6 +403,7 @@ button:active {
     border: 2px solid #026FC2;
     border-radius: 10px;
     width: 200px;
+    height: 50px;
 }
 
 .file-input::-webkit-file-upload-button {

@@ -54,6 +54,32 @@ class AttachementRepository implements Entity
             -> formatData($data);
     }
 
+    public function removeOne($id)
+    {
+        $binds['id'] = ['value' => $id, 'type' => PDO::PARAM_INT];
+
+        $data = $this
+            -> _pdoConnection
+            -> queryPrepareExecute('DELETE FROM t_attachement WHERE idAttachement = :id', $binds);
+        
+        return $this
+            -> _pdoConnection
+            -> formatData($data);
+    }
+
+    public function getAllByTicket($id)
+    {
+        $binds['id'] = ['value' => $id, 'type' => PDO::PARAM_INT];
+
+        $data = $this
+            -> _pdoConnection
+            -> queryPrepareExecute('SELECT * FROM t_attachement WHERE fkTicket = :id', $binds);
+        
+        return $this
+            -> _pdoConnection
+            -> formatData($data);
+    }
+
     public function createOne($path, $ticket)
     {
         $binds['path'] = ['value' => $path, 'type' => PDO::PARAM_STR];

@@ -70,6 +70,79 @@ class TicketRepository implements Entity
             ->formatData($data);
     }
 
+    public function searchTicket($search, $type, $status, $priority)
+    {
+        //$query = 'SELECT * FROM t_ticket WHERE (ticTitle LIKE :search OR ticDescription LIKE :keyword)';
+        $query = 'SELECT * FROM t_ticket WHERE (';
+
+        $keywords = explode(' ', $search);
+
+        if (count($keywords) < 2)
+        {
+            $binds['search'] = ['value' => "%" . $search . "%", 'type' => PDO::PARAM_STR];
+
+            $query = 'SELECT * FROM t_ticket WHERE (ticTitle LIKE :search OR ticDescription LIKE :search)';
+        }
+        else
+        {
+            for ($i = 0;$i < count($keywords); $i++)
+            {
+                if (!empty($keywords[$i]))
+                {
+                    $binds[$keywords[$i]] = ['value' => "%" . $keywords[$i] . "%", 'type' => PDO::PARAM_STR];
+                    $query .= 'ticTitle LIKE :' . $keywords[$i];
+                    if ($i < count($keywords)-1)
+                    {
+                        $query .= ' && ';
+                    }
+                }
+            }
+            $query .= ') OR (';
+
+            for ($i = 0;$i < count($keywords); $i++)
+            {
+                if (!empty($keywords[$i]))
+                {
+                    $binds[$keywords[$i]] = ['value' => "%" . $keywords[$i] . "%", 'type' => PDO::PARAM_STR];
+                    $query .= 'ticDescription LIKE :' . $keywords[$i];
+                    if ($i < count($keywords)-1)
+                    {
+                        $query .= ' && ';
+                    }
+                }
+            }
+            $query .= ')';
+        }
+
+        if ($type != 0)
+        {
+            $binds['type'] = ['value' => $type, 'type' => PDO::PARAM_INT];
+            $query .= ' AND fkType = :type';
+            
+        }
+
+        if ($status != 0)
+        {
+            $binds['status'] = ['value' => $status, 'type' => PDO::PARAM_INT];
+            $query .= ' AND fkStatus = :status';
+            
+        }
+
+        if ($priority != 0)
+        {
+            $binds['priority'] = ['value' => $priority, 'type' => PDO::PARAM_INT];
+            $query .= ' AND fkPriority = :priority';
+        }
+
+        $data = $this
+            ->_pdoConnection
+            ->queryPrepareExecute($query, $binds);
+        
+        return $this
+            ->_pdoConnection
+            ->formatData($data);
+    }
+
     public function getLastCreatedId()
     {
         $data = $this

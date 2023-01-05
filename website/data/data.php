@@ -118,7 +118,6 @@ class Data
             }
 
             $req->execute();
-
             return $req;
         }
         catch(PDOException $e)
