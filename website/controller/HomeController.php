@@ -114,21 +114,23 @@ class HomeController extends Controller
         define('ADMINS', $userRepository -> getAdmins());
         define('USERS', $userRepository -> getAll());
 
-
-        if ($_SESSION['isAdmin'] == '0')
-        {
-            $view = file_get_contents('view/page/home/user_dashboard.php');
-        }
-        else
-        {
-            $view = file_get_contents('view/page/home/admin_dashboard.php');
-        }
+        $view = file_get_contents('view/page/home/user_dashboard.php');
         
         ob_start();
         eval('?>' . $view);
         $content = ob_get_clean();
 
         return $content;
+    }
+
+    private function updateTicketAction()
+    {
+        $ticketRepository = new TicketRepository();
+
+        $ticketRepository -> updateTicket($_GET['ticketId'], $_POST['title'], $_POST['description'], $_POST['priority'], $_POST['status'], $_POST['type'], $_POST['assigned']);
+
+        header('Location: index.php?ticketId=' . $_GET['ticketId']);
+        die();
     }
 
     private function createTicketAction()
@@ -212,7 +214,6 @@ class HomeController extends Controller
 
         if ($uploaded == 1)
         {
-            var_dump($_POST);
 
             $ticketRepository->createOne($_POST['title'], $_POST['description'], $_POST['type'], $_SESSION['id']);
             $ticketId = $ticketRepository->getLastCreatedId();

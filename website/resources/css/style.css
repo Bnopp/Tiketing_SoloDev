@@ -230,7 +230,7 @@ button:active {
 }
 
 .search-bar #info select {
-    width: 100%;
+    width: 80%;
 }
 
 .search-bar #info button {
@@ -374,7 +374,7 @@ button:active {
 }
 
 .data-form select {
-    width: 50%;
+    width: 100%;
 }
 
 .data-form input::placeholder, textarea::placeholder{
@@ -395,6 +395,10 @@ button:active {
     color: #FFFFFF;
     width: 30%;
     transition: all 0.5s;
+}
+
+.data-form #info button {
+    width: 100%;
 }
 
 .file-input {

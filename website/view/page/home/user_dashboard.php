@@ -52,8 +52,8 @@
                         </select>
                     </div>
                     <div id="info">
-                        <label for="types">Type:</label>
-                        <select name="type" id="types">
+                        <label for="type">Type:</label>
+                        <select name="type" id="type">
                             <option value="0">Tout</option>
                             <?php
                                 foreach(TYPES as $type)
@@ -69,6 +69,44 @@
                             ?>
                         </select>
                     </div>
+                    <div id="info">
+                        <label for="order">Création:</label>
+                        <select name="order" id="order">
+                            <?php
+                                $option = '<option value="0"';
+                                if (isset($_GET['order']) && $_GET['order'] == 0)
+                                {
+                                    $option .= 'selected ';
+                                }
+                                $option .= '>Ascendant</option>';
+                                echo $option;
+                                $option = '<option value="1"';
+                                if (isset($_GET['order']) && $_GET['order'] == 1)
+                                {
+                                    $option .= 'selected ';
+                                }
+                                $option .= '>Descendant</option>';
+                                echo $option;
+                            ?>
+                        </select>
+                    </div>
+                    <?php if ($_SESSION['isAdmin'] == 1): ?>
+                        <div id="info">
+                            <label for="assigned">Assigné à:</label>
+                            <select name="assigned" id="assigned">
+                                <option value="0">Tout</option>
+                                <?php
+                                    $option = '<option value="1"';
+                                    if (isset($_GET['assigned']) && $_GET['assigned'] == 1)
+                                    {
+                                        $option .= 'selected ';
+                                    }
+                                    $option .= '>Assigné à moi</option>';
+                                    echo $option;
+                                ?>
+                            </select>
+                        </div>
+                    <?php endif ?>
                 </div>
             </form>
         </div>
@@ -78,6 +116,8 @@
                 $type = 0;
                 $status = 0;
                 $priority = 0;
+                $order = 0;
+                $assigned = 0;
 
                 if (isset($_GET['search']) && !empty($_GET['search']))
                 {
@@ -98,7 +138,19 @@
                 {
                     $priority = $_GET['priority'];
                 }
-                $tickets = $ticketRepository -> searchTicket($search, $type, $status, $priority);
+
+                if (isset($_GET['order']))
+                {
+                    $order = $_GET['order'];
+                }
+
+                if (isset($_GET['assigned']))
+                {
+                    $assigned = $_GET['assigned'];
+                }
+                
+                $tickets = $ticketRepository -> searchTicket($search, $type, $status, $priority, $order, $assigned);
+                //var_dump($tickets);
             ?>
             <?php foreach($tickets as $ticket): ?>
                 <?php echo '<a class="container ticket" href="index.php?ticketId=' .  htmlspecialchars($ticket['idTicket']) . '">'; ?>
@@ -229,8 +281,12 @@
             $attachements = $attachementRepository -> getAllByTicket($_GET['ticketId']);
             echo '<h2>Ticket nb.' .  htmlspecialchars($_GET['ticketId']) . '</h2>';
         ?>
-
-        <form class="container data-form" enctype="multipart/form-data" id="ticket-creation" method="POST" action="index.php?controller=home&action=createTicket">
+        <?php 
+            $form = '<form class="container data-form" enctype="multipart/form-data" id="ticket-creation" method="POST" action="index.php?ticketId=';
+            $form .= htmlspecialchars($ticket[0]['idTicket']) . '&controller=home&action=updateTicket">';
+            echo $form;
+        ?>
+        
             <label for="title">Titre:</label>
 
             <?php echo '<input type="text" name="title" placeholder="Titre" value="' .  htmlspecialchars($ticket[0]['ticTitle']) . '" required readonly>';?>
@@ -240,106 +296,250 @@
             <?php echo ' <textarea name="description" placeholder="Description" required readonly>' .  htmlspecialchars($ticket[0]['ticDescription']) . '</textarea>';?>
 
             <div class="info-content">
-                <div class="row">
-                    <div id="info">
-                        <p id="label">Priorité:</p>
-                        <?php 
-                            if (isset($ticket[0]['fkPriority']))
-                            {
-                                if ($ticket[0]['fkPriority'] == 1)
+                <?php if ($_SESSION['isAdmin'] == 1): ?>
+                    <div class="row">
+                        <div id="info">
+                            <p id="label">Priorité:</p>
+                            <select name="priority" id="priority">
+                                <option value="0">Non attribué</option>
+                                <?php
+                                    foreach(PRIORITIES as $priority)
+                                    {
+                                        $option = '<option value="' . htmlspecialchars($priority['idPriority']) . '"';
+                                        if (isset($ticket[0]['fkPriority']) && $ticket[0]['fkPriority'] == $priority['idPriority'])
+                                        {
+                                            $option .= 'selected ';
+                                        }
+                                        $option .= '>' . htmlspecialchars($priority['priTitle']) . '</option>';
+                                        echo $option;
+                                    }
+                                ?>
+                            </select>
+                        </div>
+                        <div id="info">
+                            <p id="label">Status:</p>
+                            <select name="status" id="status">
+                                <?php
+                                    foreach(STATUSES as $status)
+                                    {
+                                        $option = '<option value="' . htmlspecialchars($status['idStatus']) . '"';
+                                        if (isset($ticket[0]['fkStatus']) && $ticket[0]['fkStatus'] == $status['idStatus'])
+                                        {
+                                            $option .= 'selected ';
+                                        }
+                                        $option .= '>' . htmlspecialchars($status['staTitle']) . '</option>';
+                                        echo $option;
+                                    }
+                                ?>
+                            </select>
+                        </div>
+                        <div id="info">
+                            <p id="label">Type:</p>
+                            <select name="type" id="type">
+                                <?php
+                                    foreach(TYPES as $type)
+                                    {
+                                        $option = '<option value="' . htmlspecialchars($type['idType']) . '"';
+                                        if (isset($ticket[0]['fkType']) && $ticket[0]['fkType'] == $type['idType'])
+                                        {
+                                            $option .= 'selected ';
+                                        }
+                                        $option .= '>' . htmlspecialchars($type['tyTitle']) . '</option>';
+                                        echo $option;
+                                    }
+                                ?>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div id="info">
+                            <p id="label">Assigné à:</p>
+                            <select name="assigned" id="assigned">
+                                <option value="0">Non assigné</option>
+                                <?php
+                                    foreach(ADMINS as $admin)
+                                    {
+                                        $option = '<option value="' . htmlspecialchars($admin['idUser']) . '"';
+                                        if (isset($ticket[0]['fkResolver']) && $ticket[0]['fkResolver'] == $admin['idUser'])
+                                        {
+                                            $option .= 'selected ';
+                                        }
+                                        $option .= '>' . htmlspecialchars($admin['useSurname']) . ' ' . htmlspecialchars($admin['useName']) . '</option>';
+                                        echo $option;
+                                    }
+                                ?>
+                            </select>
+                        </div>
+                        <div id="info">
+                            <button type="submit">Mettre à jour le ticket</button>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div id="info">
+                            <p id="label">Pièces(s) jointe(s):</p>
+                            <?php
+                                if (count($attachements) > 0)
                                 {
-                                    $pri = '<p class="low">';
+                                    foreach ($attachements as $attachement)
+                                    {
+                                        if(!file_exists($attachement['attPath']))
+                                        {
+                                            $attachementRepository -> removeOne($attachement['idAttachement']);
+                                            echo "<p>Ce ticket ne contient pas de pièces jointes";
+                                        }
+                                        else
+                                        {
+                                            echo '<a href="' . htmlspecialchars($attachement['attPath']) . '">' . htmlspecialchars(basename($attachement['attPath'])) .'</a>';
+                                        }
+                                    }
                                 }
-                                else if ($ticket[0]['fkPriority'] == 2)
+                                else
                                 {
-                                    $pri = '<p class="medium">';
+                                    echo "<p>Ce ticket ne contient pas de pièces jointes";
                                 }
-                                else if ($ticket[0]['fkPriority'] == 3)
+                            ?>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div id="info">
+                            <p id="label">Crée par:</p>
+                            <?php 
+                                if(isset($ticket[0]['fkUser']))
                                 {
-                                    $pri = '<p class="high">';
+                                    echo '<p>' .  htmlspecialchars(USERS[$ticket[0]['fkUser']-1]['useSurname']) . ' ' . 
+                                    htmlspecialchars(USERS[$ticket[0]['fkUser']-1]['useName']) . '</p>';
                                 }
+                            ?>
+                        </div>
+                        <div id="info">
+                            <p id="label">Crée le:</p>
+                            <?php 
+                                if(isset($ticket[0]['ticCreationDate']))
+                                {
+                                    echo '<p>' .  htmlspecialchars($ticket[0]['ticCreationDate']) . '</p>';
+                                }
+                                else
+                                {
+                                    echo '<p>Pas encore résolu</p>';
+                                }
+                            ?>
+                        </div>
+                        <div id="info">
+                            <p id="label">Résolu le:</p>
+                            <?php 
+                                if(isset($ticket[0]['ticResolutionDate']))
+                                {
+                                    echo '<p>' .  htmlspecialchars($ticket[0]['ticResolutionDate']) . '</p>';
+                                }
+                                else
+                                {
+                                    echo '<p>Pas encore résolu</p>';
+                                }
+                            ?>
+                        </div>
+                    </div>
+                <?php else: ?>
+                    <div class="row">
+                        <div id="info">
+                            
+                            <p id="label">Priorité:</p>
+                            <?php 
+                                if (isset($ticket[0]['fkPriority']))
+                                {
+                                    if ($ticket[0]['fkPriority'] == 1)
+                                    {
+                                        $pri = '<p class="low">';
+                                    }
+                                    else if ($ticket[0]['fkPriority'] == 2)
+                                    {
+                                        $pri = '<p class="medium">';
+                                    }
+                                    else if ($ticket[0]['fkPriority'] == 3)
+                                    {
+                                        $pri = '<p class="high">';
+                                    }
 
-                                echo $pri .  htmlspecialchars(PRIORITIES[$ticket[0]['fkPriority']-1]['priTitle']) . '</p>';
-                            }
-                            else
-                            {
-                                echo '<p>Non attribuée</p>';
-                            }
-                        ?>
+                                    echo $pri .  htmlspecialchars(PRIORITIES[$ticket[0]['fkPriority']-1]['priTitle']) . '</p>';
+                                }
+                                else
+                                {
+                                    echo '<p>Non attribuée</p>';
+                                }
+                            ?>
+                        </div>
+                        <div id="info">
+                            <p id="label">Status:</p>
+                            <?php 
+                                if(isset($ticket[0]['fkStatus']))
+                                {
+                                    echo '<p>' .  htmlspecialchars(STATUSES[$ticket[0]['fkStatus']-1]['staTitle']) . '</p>';
+                                }
+                            ?>
+                        </div>
+                        <div id="info">
+                            <p id="label">Type:</p>
+                            <?php 
+                                if(isset($ticket[0]['fkType']))
+                                {
+                                    echo '<p>' .  htmlspecialchars(TYPES[$ticket[0]['fkType']-1]['tyTitle']) . '</p>';
+                                }
+                            ?>
+                        </div>
                     </div>
-                    <div id="info">
-                        <p id="label">Status:</p>
-                        <?php 
-                            if(isset($ticket[0]['fkStatus']))
-                            {
-                                echo '<p>' .  htmlspecialchars(STATUSES[$ticket[0]['fkStatus']-1]['staTitle']) . '</p>';
-                            }
-                        ?>
+                    <div class="row">
+                        <div id="info">
+                            <p id="label">Assigné à:</p>
+                            <?php 
+                                if(isset($ticket[0]['fkResolver']))
+                                {
+                                    echo '<p>' .  htmlspecialchars(ADMINS[$ticket[0]['fkResolver']-1]['useSurname']) . ' ' . 
+                                    htmlspecialchars(ADMINS[$ticket[0]['fkResolver']-1]['useName']) . '</p>';
+                                }
+                                else
+                                {
+                                    echo '<p>Non assigné</p>';
+                                }
+                            ?>
+                        </div>
+                        <div id="info">
+                            <p id="label">Crée par:</p>
+                            <?php 
+                                if(isset($ticket[0]['fkUser']))
+                                {
+                                    echo '<p>' .  htmlspecialchars(USERS[$ticket[0]['fkUser']-1]['useSurname']) . ' ' . 
+                                    htmlspecialchars(USERS[$ticket[0]['fkUser']-1]['useName']) . '</p>';
+                                }
+                            ?>
+                        </div>
                     </div>
-                    <div id="info">
-                        <p id="label">Type:</p>
-                        <?php 
-                            if(isset($ticket[0]['fkType']))
-                            {
-                                echo '<p>' .  htmlspecialchars(TYPES[$ticket[0]['fkType']-1]['tyTitle']) . '</p>';
-                            }
-                        ?>
+                    <div class="row">
+                        <div id="info">
+                            <p id="label">Crée le:</p>
+                            <?php 
+                                if(isset($ticket[0]['ticCreationDate']))
+                                {
+                                    echo '<p>' .  htmlspecialchars($ticket[0]['ticCreationDate']) . '</p>';
+                                }
+                                else
+                                {
+                                    echo '<p>Pas encore résolu</p>';
+                                }
+                            ?>
+                        </div>
+                        <div id="info">
+                            <p id="label">Résolu le:</p>
+                            <?php 
+                                if(isset($ticket[0]['ticResolutionDate']))
+                                {
+                                    echo '<p>' .  htmlspecialchars($ticket[0]['ticResolutionDate']) . '</p>';
+                                }
+                                else
+                                {
+                                    echo '<p>Pas encore résolu</p>';
+                                }
+                            ?>
+                        </div>
                     </div>
-                </div>
-                <div class="row">
-                    <div id="info">
-                        <p id="label">Assigné à:</p>
-                        <?php 
-                            if(isset($ticket[0]['fkResolver']))
-                            {
-                                echo '<p>' .  htmlspecialchars(ADMINS[$ticket[0]['fkResolver']-1]['useSurname']) . ' ' . 
-                                htmlspecialchars(ADMINS[$ticket[0]['fkResolver']-1]['useName']) . '</p>';
-                            }
-                            else
-                            {
-                                echo '<p>Non assigné</p>';
-                            }
-                        ?>
-                    </div>
-                    <div id="info">
-                        <p id="label">Crée par:</p>
-                        <?php 
-                            if(isset($ticket[0]['fkUser']))
-                            {
-                                echo '<p>' .  htmlspecialchars(USERS[$ticket[0]['fkUser']-1]['useSurname']) . ' ' . 
-                                htmlspecialchars(USERS[$ticket[0]['fkUser']-1]['useName']) . '</p>';
-                            }
-                        ?>
-                    </div>
-                </div>
-                <div class="row">
-                    <div id="info">
-                        <p id="label">Crée le:</p>
-                        <?php 
-                            if(isset($ticket[0]['ticCreationDate']))
-                            {
-                                echo '<p>' .  htmlspecialchars($ticket[0]['ticCreationDate']) . '</p>';
-                            }
-                            else
-                            {
-                                echo '<p>Pas encore résolu</p>';
-                            }
-                        ?>
-                    </div>
-                    <div id="info">
-                        <p id="label">Résolu le:</p>
-                        <?php 
-                            if(isset($ticket[0]['ticResolutionDate']))
-                            {
-                                echo '<p>' .  htmlspecialchars($ticket[0]['ticResolutionDate']) . '</p>';
-                            }
-                            else
-                            {
-                                echo '<p>Pas encore résolu</p>';
-                            }
-                        ?>
-                    </div>
-                </div>
                 <div class="row">
                     <div id="info">
                         <p id="label">Pièces(s) jointe(s):</p>
@@ -367,6 +567,7 @@
                         ?>
                     </div>
                 </div>
+                <?php endif ?>
             </div>
         </form>
         

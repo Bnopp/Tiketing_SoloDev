@@ -116,7 +116,7 @@ class Data
                     $req->bindValue($key, $value["value"], $value["type"]);
                 }
             }
-
+            
             $req->execute();
             return $req;
         }

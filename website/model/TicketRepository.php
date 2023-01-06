@@ -70,9 +70,55 @@ class TicketRepository implements Entity
             ->formatData($data);
     }
 
-    public function searchTicket($search, $type, $status, $priority)
+    public function updateTicket($id, $title, $description, $priority, $status, $type, $resolver)
     {
-        //$query = 'SELECT * FROM t_ticket WHERE (ticTitle LIKE :search OR ticDescription LIKE :keyword)';
+        $binds['title'] = ['value' => $title, 'type' => PDO::PARAM_STR];
+        $binds['description'] = ['value' => $description, 'type' => PDO::PARAM_STR];
+        if ($priority == 0)
+        {
+            $priority = null;
+        }
+        $binds['priority'] = ['value' => $priority, 'type' => PDO::PARAM_INT];
+        if ($status == 1 && $resolver > 0)
+        {
+            $status = 2;
+        }
+        if ($resolver == 0)
+        {
+            $status = 1;
+        }
+        $binds['status'] = ['value' => $status, 'type' => PDO::PARAM_INT];
+        $binds['type'] = ['value' => $type, 'type' => PDO::PARAM_INT];
+        if ($resolver == 0)
+        {
+            $resolver = null;
+        }
+        $binds['resolver'] = ['value' => $resolver, 'type' => PDO::PARAM_INT];
+        $binds['id'] = ['value' => $id, 'type' => PDO::PARAM_INT];
+
+
+        if ($status == 5)
+        {
+            $query = 'UPDATE t_ticket SET ticTitle = :title, ticDescription = :description, fkPriority = :priority, fkStatus = :status,
+                    fkType = :type, fkResolver = :resolver, ticResolutionDate = now() WHERE idTicket = :id;';
+        }
+        else
+        {
+            $query = 'UPDATE t_ticket SET ticTitle = :title, ticDescription = :description, fkPriority = :priority, fkStatus = :status,
+                    fkType = :type, fkResolver = :resolver WHERE idTicket = :id;';
+        }
+
+        $data = $this
+            ->_pdoConnection
+            ->queryPrepareExecute($query, $binds);
+
+        return $this
+            ->_pdoConnection
+            ->formatData($data);
+    }
+
+    public function searchTicket($search, $type, $status, $priority, $order, $assigned)
+    {
         $query = 'SELECT * FROM t_ticket WHERE (';
 
         $keywords = explode(' ', $search);
@@ -132,6 +178,27 @@ class TicketRepository implements Entity
         {
             $binds['priority'] = ['value' => $priority, 'type' => PDO::PARAM_INT];
             $query .= ' AND fkPriority = :priority';
+        }
+
+        if ($assigned == 1)
+        {
+            $binds['admin'] = ['value' => $_SESSION['id'], 'type' => PDO::PARAM_INT];
+            $query .= ' AND fkResolver = :admin';
+        }
+
+        if ($_SESSION['isAdmin'] == 0)
+        {
+            $binds['user'] = ['value' => $_SESSION['id'], 'type' => PDO::PARAM_INT];
+            $query .= ' AND fkUser = :user';
+        }
+
+        if ($order == 0)
+        {
+            $query .= ' ORDER BY `t_ticket`.`ticCreationDate` ASC';
+        }
+        else
+        {
+            $query .= ' ORDER BY `t_ticket`.`ticCreationDate` DESC';
         }
 
         $data = $this
