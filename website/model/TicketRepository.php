@@ -117,6 +117,18 @@ class TicketRepository implements Entity
             ->formatData($data);
     }
 
+    public function validateTicket($ticket)
+    {
+        $binds['ticket'] = ['value' => $ticket, 'type' => PDO::PARAM_INT];
+        $data = $this
+            -> _pdoConnection
+            -> queryPrepareExecute('UPDATE t_ticket SET fkStatus = 5, ticResolutionDate = now() WHERE idTicket = :ticket', $binds);
+
+        return $this
+            -> _pdoConnection
+            -> formatData($data);
+    }
+
     public function searchTicket($search, $type, $status, $priority, $order, $assigned)
     {
         $query = 'SELECT * FROM t_ticket WHERE (';

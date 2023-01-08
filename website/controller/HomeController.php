@@ -20,6 +20,7 @@
 include_once 'model/UserRepository.php';
 include_once 'model/TicketRepository.php';
 include_once 'model/AttachementRepositoy.php';
+include_once 'model/ReplyRepository.php';
 
 class HomeController extends Controller
 {
@@ -123,11 +124,39 @@ class HomeController extends Controller
         return $content;
     }
 
+    private function sendMessageAction()
+    {
+        $replyRepository = new ReplyRepository();
+        
+        $replyRepository -> createOne($_POST['message'], $_GET['ticketId'], $_SESSION['id']);
+
+        $_SESSION['message'] = 'Message envoyé avec succés';
+
+        header('Location: index.php?ticketId=' . $_GET['ticketId'] . '#reply-area');
+        die();
+    }
+
     private function updateTicketAction()
     {
         $ticketRepository = new TicketRepository();
-
-        $ticketRepository -> updateTicket($_GET['ticketId'], $_POST['title'], $_POST['description'], $_POST['priority'], $_POST['status'], $_POST['type'], $_POST['assigned']);
+        if (!empty($_POST))
+        {
+            if (isset($_POST['accepted']) && $_POST['accepted'] == 'true')
+            {
+                $ticketRepository -> validateTicket($_GET['ticketId']);
+                $_SESSION['message'] = 'Ticket clôturé avec succés';
+            }
+            else
+            {
+                $ticketRepository -> updateTicket($_GET['ticketId'], $_POST['title'], $_POST['description'], $_POST['priority'], $_POST['status'], $_POST['type'], $_POST['assigned']);
+                $_SESSION['message'] = 'Ticket mis à jour avec succés';
+            }
+        }
+        else
+        {
+            $_SESSION['error'] = 'Une erreur est survenue. Veuillez réessayer.';
+        }
+        
 
         header('Location: index.php?ticketId=' . $_GET['ticketId']);
         die();
@@ -214,7 +243,6 @@ class HomeController extends Controller
 
         if ($uploaded == 1)
         {
-
             $ticketRepository->createOne($_POST['title'], $_POST['description'], $_POST['type'], $_SESSION['id']);
             $ticketId = $ticketRepository->getLastCreatedId();
 

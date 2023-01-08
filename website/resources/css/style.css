@@ -243,11 +243,53 @@ button:active {
     align-items: center;
 }
 
-.ticket-area {
+.list {
     background-color: #35424C;
     border: #1C252C 2px solid;
     overflow-y:scroll;
+}
+
+.ticket-area {
     height: 540px;
+}
+
+#large {
+    height: 1140px;
+}
+
+.reply-area {
+    height: 250px;
+    margin-bottom: 20px;
+    display: flex;
+    flex-direction: column-reverse;
+}
+
+.reply-area #receiver {
+    align-self: flex-start;
+    text-align: left;
+}
+
+.reply-area #sender {
+    align-self: flex-end;
+    text-align: right;
+}
+
+.reply-area .reply-date {
+    text-align: center;
+    margin: 0;
+}
+
+.reply-area .reply {
+    width: 45%;
+    margin: 5px;
+    padding: 5px;
+    display: flex;
+    flex-direction: column-reverse;
+}
+
+.reply-area .reply p {
+    margin: 0;
+    padding: 0;
 }
 
 .ticket {
@@ -257,6 +299,7 @@ button:active {
     padding: 10px;
     text-decoration: none;
     color: white;
+    height: 175px;
 }
 
 .ticket h3 {
@@ -266,6 +309,11 @@ button:active {
 .ticket .preview {
     text-align: justify;
     width: 50%;
+}
+
+.preview p {
+    overflow: scroll;
+    height: 50%;
 }
 
 .ticket .information {
@@ -399,6 +447,10 @@ button:active {
 
 .data-form #info button {
     width: 100%;
+}
+
+.data-form #message-redaction {
+    min-height: 100px;
 }
 
 .file-input {
